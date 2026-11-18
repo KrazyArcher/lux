@@ -1,5 +1,10 @@
-import unittest
+﻿import unittest
 import time
+import sys
+import os
+
+# Dynamically injecting parent directory to python path for testing
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from swarm_memory import SwarmMemory
 
 class TestSwarmMemory(unittest.TestCase):
@@ -12,11 +17,10 @@ class TestSwarmMemory(unittest.TestCase):
         self.assertEqual(res["task"], "fetch_bounty")
 
     def test_ttl_expiry(self):
-        # Set TTL to 0 to simulate immediate expiry
         self.sm.write_agent_state("AGENT_02", {"task": "secret_task"}, ttl=0)
-        time.sleep(0.1) # Ensure time passes
+        time.sleep(0.1)
         res = self.sm.read_agent_state("AGENT_02")
         self.assertIsNone(res)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
